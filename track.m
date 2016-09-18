@@ -1,7 +1,8 @@
-function multiObjectTracking(handles)
+function multiObjectTracking(inputVid)
 % Create System objects used for reading video, detecting moving objects,
 % and displaying the results.
 obj = setupSystemObjects();
+vidTitle = inputVid;
 
 tracks = initializeTracks(); % Create an empty array of tracks.
 
@@ -9,7 +10,6 @@ nextId = 1; % ID of the next track
 
 % Detect moving objects, and track them across video frames.
 while ~isDone(obj.reader)
-    handles
     frame = readFrame();
     [centroids, bboxes, mask] = detectObjects(frame);
     predictNewLocationsOfTracks();
@@ -30,7 +30,7 @@ function obj = setupSystemObjects()
         % objects in each frame, and playing the video.
 
         % Create a video file reader.
-        obj.reader = vision.VideoFileReader('Camera_1.avi');
+        obj.reader = vision.VideoFileReader(inputVid);
 
         % Create two video players, one to display the video,
         % and one to display the foreground mask.
@@ -224,7 +224,12 @@ function displayTrackingResults()
         if ~isempty(reliableTracks)
             % Get bounding boxes.
             bboxes = cat(1, reliableTracks.bbox);
-
+            for j = 1:size(bboxes, 1)
+%                 subplo
+                curChip = imcrop(frame, bboxes(j,1:4))
+                imshow(curChip)
+                waitforbuttonpress;
+            end
             % Get ids.
             ids = int32([reliableTracks(:).id]);
 
@@ -249,10 +254,8 @@ function displayTrackingResults()
     end
 
     % Display the mask and the frame.
-%     obj.maskPlayer.step(mask);
-    showFrameOnAxis(handles.axes1, frame);
-    drawnow;
-%     obj.videoPlayer.step(frame);
+    obj.maskPlayer.step(mask);
+    obj.videoPlayer.step(frame);
 end
 
 end

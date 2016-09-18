@@ -94,8 +94,7 @@ function startButton_Callback(hObject, eventdata, handles)
 %         end
 %     end
 %     handles.axes1
-    track(handles);
-    drawnow;
+    track('Camera_1.avi');
   
 end
     
