@@ -8,6 +8,9 @@ tracks = initializeTracks(); % Create an empty array of tracks.
 
 nextId = 1; % ID of the next track
 classLabels = cell(1,1);
+hfig = imgcf;
+set(hfig, 'MenuBar', 'none');
+set(hfig, 'ToolBar', 'none');
 
 % Detect moving objects, and track them across video frames.
 while ~isDone(obj.reader)
@@ -211,6 +214,7 @@ function displayTrackingResults()
     mask = uint8(repmat(mask, [1, 1, 3])) .* 255;
 
     minVisibleCount = 8;
+    
     if ~isempty(tracks)
 
         % Noisy detections tend to result in short-lived tracks.
@@ -225,20 +229,18 @@ function displayTrackingResults()
         if ~isempty(reliableTracks)
             % Get bounding boxes.
             bboxes = cat(1, reliableTracks.bbox);
-            hfig = imgcf;
-            set(hfig, 'MenuBar', 'none');
-            set(hfig, 'ToolBar', 'none');
             
-           
             % Get ids.
             ids = int32([reliableTracks(:).id]);
             for j = 1:size(bboxes, 1)
+                set(0,'CurrentFigure', hfig);
                 subplot(1,size(bboxes, 1),j);
                 curChip = imcrop(frame, bboxes(j,1:4));
                 
                 image(curChip); axis off;
-                id_test = ids(j)
-                classLabels(ids(j),:)={classify_image(curChip)};
+                if (ids(j) > size(classLabels, 1) || isequal(classLabels(ids(j),:), {}))
+                    classLabels(ids(j),:)={classify_image(curChip, true)};
+                end
             end
             % Create labels for objects indicating the ones for
             % which we display the predicted rather than the actual
