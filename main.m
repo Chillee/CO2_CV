@@ -5,5 +5,5 @@ while trafficVid.CurrentTime < trafficVid.Duration
     singleFrame = readFrame(trafficVid);
     imshow(singleFrame)
     [x] = processFrame()
-    key = waitforbuttonpres
+    key = waitforbuttonpress;
 end
