@@ -56,6 +56,11 @@ function [scores, maxlabel] = classification_demo(im, use_gpu)
 % a=gpuArray(1);
 % clear a;
 
+%relevant indices
+%golfcart,passenger car, streetcar,
+%garbage truck, [minibus 655], school bus, trolley bus, mountain bike
+indices = [576 706 830 570 780 875 672];
+
 % Add caffe/matlab to you Matlab search PATH to use matcaffe
 addpath('C:\Users\isayk\Desktop\git\caffe-windows\Build\x64\Release\matcaffe');
 % if exist('../+caffe', 'dir')
@@ -116,10 +121,17 @@ scores = net.forward(input_data);
 scores = scores{1};
 scores = mean(scores, 2);  % take average scores over 10 crops
 
+%take only relevant scores
+interest = zeros(1000,1);
+interest(indices) = 1;
+scores = interest.*scores;
+
+disp(scores);
+
 [~, maxlabel] = max(scores);
 
 % call caffe.reset_all() to reset caffe
-% caffe.reset_all();
+caffe.reset_all();
 
 % ------------------------------------------------------------------------
 function crops_data = prepare_image(im)

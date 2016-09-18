@@ -238,7 +238,7 @@ function displayTrackingResults()
                 
                 image(curChip); axis off;
                 id_test = ids(j)
-                classLabels(ids(j),:)={classify_image(curChip)};
+                classLabels(ids(j),:)={classify_image(curChip, false)};
             end
             % Create labels for objects indicating the ones for
             % which we display the predicted rather than the actual
