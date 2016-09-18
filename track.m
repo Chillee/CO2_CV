@@ -223,7 +223,10 @@ function displayTrackingResults()
         reliableTrackInds = ...
             [tracks(:).totalVisibleCount] > minVisibleCount;
         reliableTracks = tracks(reliableTrackInds);
-
+        predictedTrackInds = ...
+                [reliableTracks(:).consecutiveInvisibleCount] > 0;
+        isPredicted = cell(size(reliableTracks));
+        isPredicted(predictedTrackInds) = {' predicted'};
         % Display the objects. If an object has not been detected
         % in this frame, display its predicted bounding box.
         if ~isempty(reliableTracks)
@@ -233,6 +236,9 @@ function displayTrackingResults()
             % Get ids.
             ids = int32([reliableTracks(:).id]);
             for j = 1:size(bboxes, 1)
+                if (isequal(isPredicted(j), {' predicted'}))
+                    continue
+                end
                 set(0,'CurrentFigure', hfig);
                 subplot(1,size(bboxes, 1),j);
                 curChip = imcrop(frame, bboxes(j,1:4));
@@ -246,20 +252,27 @@ function displayTrackingResults()
             % Create labels for objects indicating the ones for
             % which we display the predicted rather than the actual
             % location.
-            labels = strcat(cellstr(int2str(ids')),' ',classLabels(ids'));
-            predictedTrackInds = ...
-                [reliableTracks(:).consecutiveInvisibleCount] > 0;
-            isPredicted = cell(size(labels));
-            isPredicted(predictedTrackInds) = {' predicted'};
-            labels = strcat(labels, isPredicted);
+            labels = classLabels(ids');
+            
+%             labels = strcat(labels, isPredicted);
 
             % Draw the objects on the frame.
-            frame = insertObjectAnnotation(frame, 'rectangle', ...
-                bboxes, labels);
+            for j=1:size(labels, 1)
+                if (isequal(isPredicted(j), {' predicted'}))
+                    continue
+                end
+                frame = insertObjectAnnotation(frame, 'rectangle', ...
+                bboxes(j,:), labels(j));
+            end
 
             % Draw the objects on the mask.
-            mask = insertObjectAnnotation(mask, 'rectangle', ...
-                bboxes, labels);
+            for j=1:size(labels, 1)
+                if (isequal(isPredicted(j), {' predicted'}))
+                    continue
+                end
+                mask = insertObjectAnnotation(mask, 'rectangle', ...
+                bboxes(j,:), labels(j));
+            end
         end
     end
 
