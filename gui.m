@@ -82,17 +82,21 @@ end
 function startButton_Callback(hObject, eventdata, handles)
     global pausePlayback;
     pausePlayback=0;
-    while handles.currentVid.CurrentTime < handles.currentVid.Duration
-        singleFrame = readFrame(handles.currentVid);
-        image(singleFrame);
-        [x] = processFrame();
-        y = pause(0.5)
-        drawnow;
-        if (pausePlayback==1)
-            pausePlayback=0
-            break
-        end
-    end
+%     while handles.currentVid.CurrentTime < handles.currentVid.Duration
+%         singleFrame = readFrame(handles.currentVid);
+%         image(singleFrame);
+%         [x] = processFrame();
+%         y = pause(0.5)
+%         drawnow;
+%         if (pausePlayback==1)
+%             pausePlayback=0
+%             break
+%         end
+%     end
+%     handles.axes1
+    track(handles);
+    drawnow;
+  
 end
     
 % hObject    handle to startBtton (see GCBO)
