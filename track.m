@@ -7,7 +7,7 @@ vidTitle = inputVid;
 tracks = initializeTracks(); % Create an empty array of tracks.
 
 nextId = 1; % ID of the next track
-classLabels = cell(1,1);
+classLabels = cell(0,1);
 hfig = imgcf;
 set(hfig, 'MenuBar', 'none');
 set(hfig, 'ToolBar', 'none');
