@@ -7,6 +7,7 @@ vidTitle = inputVid;
 tracks = initializeTracks(); % Create an empty array of tracks.
 
 nextId = 1; % ID of the next track
+classLabels = cell(1,1);
 
 % Detect moving objects, and track them across video frames.
 while ~isDone(obj.reader)
@@ -224,19 +225,25 @@ function displayTrackingResults()
         if ~isempty(reliableTracks)
             % Get bounding boxes.
             bboxes = cat(1, reliableTracks.bbox);
-            for j = 1:size(bboxes, 1)
-%                 subplo
-                curChip = imcrop(frame, bboxes(j,1:4))
-                imshow(curChip)
-                waitforbuttonpress;
-            end
+            hfig = imgcf;
+            set(hfig, 'MenuBar', 'none');
+            set(hfig, 'ToolBar', 'none');
+            
+           
             % Get ids.
             ids = int32([reliableTracks(:).id]);
-
+            for j = 1:size(bboxes, 1)
+                subplot(1,size(bboxes, 1),j);
+                curChip = imcrop(frame, bboxes(j,1:4));
+                
+                image(curChip); axis off;
+                id_test = ids(j)
+                classLabels(ids(j),:)={classify_image(curChip)};
+            end
             % Create labels for objects indicating the ones for
             % which we display the predicted rather than the actual
             % location.
-            labels = cellstr(int2str(ids'));
+            labels = strcat(cellstr(int2str(ids')),' ',classLabels(ids'));
             predictedTrackInds = ...
                 [reliableTracks(:).consecutiveInvisibleCount] > 0;
             isPredicted = cell(size(labels));
