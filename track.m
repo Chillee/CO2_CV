@@ -238,6 +238,7 @@ function displayTrackingResults()
                 curChip = imcrop(frame, bboxes(j,1:4));
                 
                 image(curChip); axis off;
+
                 if (ids(j) > size(classLabels, 1) || isequal(classLabels(ids(j),:), {}))
                     classLabels(ids(j),:)={classify_image(curChip, true)};
                 end
