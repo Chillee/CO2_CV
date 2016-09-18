@@ -53,8 +53,8 @@ function obj = setupSystemObjects()
 
         % Create two video players, one to display the video,
         % and one to display the foreground mask.
-        obj.videoPlayer = vision.VideoPlayer('Position', [20, 400, 700, 400], 'Name', 'Camera View');
-        obj.maskPlayer = vision.VideoPlayer('Position', [740, 400, 700, 400], 'Name', 'Segmentation Mask');
+        obj.videoPlayer = vision.VideoPlayer('Position', [20, 400, 700, 400]);
+        obj.maskPlayer = vision.VideoPlayer('Position', [740, 400, 700, 400]);
 
         % Create System objects for foreground detection and blob analysis
 
@@ -297,11 +297,11 @@ function displayTrackingResults()
             secondcount = secondcount + 1;
             for j=1:size(ids,2)
                 %classLabels(ids(j))
-                if (strcmp(classLabels(ids(j)), 'passenger car') || strcmp(classLabels(ids(j)), 'streetcar'))
-                    passengercar_pol = passengercar_pol + 0.011; %per frame rate of pollution
+                if (strcmp(classLabels(ids(j)), 'passenger car'))
+                    passengercar_pol = passengercar_pol + 0.01; %per frame rate of pollution
                     currnumcars = currnumcars + 1;
                 elseif (strcmp(classLabels(ids(j)), 'school bus'))
-                    schoolbus_pol = schoolbus_pol + 0.055; %per frame rate of pol
+                    schoolbus_pol = schoolbus_pol + 0.10; %per frame rate of pol
                     currnumbuses = currnumbuses + 1;
                 end
             end
@@ -327,22 +327,14 @@ function displayTrackingResults()
     annotation('textbox',[0.1 0.5 0.5 0],'String',totalpolstr,'FitBoxToText','on');
     
     summarystr = 'No summary';
-    color = 'black';
-    if ((passengercar_pol + schoolbus_pol)/secondcount > 0.09)
-        summarystr = 'Summary: The region is experiencing very high levels of pollution.';
-        color = [0.6 0 0];
-    elseif ((passengercar_pol + schoolbus_pol)/secondcount > 0.05)
-        summarystr = 'Summary: The region is experiencing high levels of pollution.';
-        color = [0.6 0 0];
-    elseif ((passengercar_pol + schoolbus_pol)/secondcount > 0.02)
-        summarystr = 'Summary: The filmed region is experiencing mild levels of pollution.';
-        color = [0.6 0.6 0];
-    elseif ((passengercar_pol + schoolbus_pol)/secondcount > 0.01)
-        summarystr = 'Summary: The filmed region is experiencing very little pollution currently.';
-        color = [0 0.6 0];
-    end
-    
-    annotation('textbox',[0.1 0.3 0.5 0],'String',summarystr,'FitBoxToText','on','Color', color);
+    if ((passengercar_pol + schoolbus_pol)/secondcount < 0.01)
+        
+    elseif ((passengercar_pol + schoolbus_pol)/secondcount < 0.01)
+        
+    else if ((passengercar_pol + schoolbus_pol)/secondcount < 0.01)
+            
+        
+    annotation('textbox',[0.1 0.3 0.5 0],'String','The region is very polluted!','FitBoxToText','on');
 end
 
 end

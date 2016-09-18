@@ -57,9 +57,9 @@ function [scores, maxlabel] = classification_demo(im, use_gpu)
 % clear a;
 
 %relevant indices
-%golfcart,passenger car, streetcar,
-%garbage truck, [minibus 655], school bus, trolley bus, mountain bike
-indices = [576 706 830 570 780 875 672];
+%passenger car, streetcar,
+%garbage truck, [minibus 655], school bus, trolley bus
+indices = [706 830 570 780 875];
 
 % Add caffe/matlab to you Matlab search PATH to use matcaffe
 addpath('C:\Users\isayk\Desktop\git\caffe-windows\Build\x64\Release\matcaffe');
